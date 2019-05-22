@@ -1,0 +1,8 @@
+victor/
+victor/*
+venv/
+venv/*
+
+.idea/
+.idea/*
+

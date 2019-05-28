@@ -11,7 +11,7 @@ while True:
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     face = face_cascade.detectMultiScale(gray, scaleFactor=1.6, minNeighbors=7, minSize=(150, 150))
     for x, y, w, h in face:
-        cv2.imwrite('photos/victor/img-{:d}.png'.format(index), frame[y:y+h, x:x+w])
+        cv2.imwrite('photos/victor/img-{:d}.png'.format(index), frame[y-60:y+h+50, x:x+w+40])
         cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 0, 255), 2)
         index += 1
     if cv2.waitKey(1) & 0xFF == ord('q'):

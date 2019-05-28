@@ -1,32 +1,30 @@
 import cv2
-import operator
+import function.parameters as c
 
 face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + "haarcascade_frontalface_alt2.xml")
-profile_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + "haarcascade_profileface.xml")
 cap = cv2.VideoCapture(0)
 width = int(cap.get(3))
-marge = 200
+font = cv2.FONT_HERSHEY_SIMPLEX
 
 while True:
     ret, frame = cap.read()
     tab_face = []
     tickmark = cv2.getTickCount()
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-    face = face_cascade.detectMultiScale(gray, scaleFactor=1.6, minNeighbors=4, minSize=(10, 10))
+    face = face_cascade.detectMultiScale(gray, scaleFactor=1.4, minNeighbors=4, minSize=(10, 10))
     for x, y, w, h in face:
         tab_face.append([x, y, x+w, y+h])
-    face=profile_cascade.detectMultiScale(gray, scaleFactor=1.5, minNeighbors=5, minSize=(10, 10))
-    for x, y, w, h in face:
-        tab_face.append([x, y, x+w, y+h])
-    gray2 = cv2.flip(gray, 1)
-    face = profile_cascade.detectMultiScale(gray2, scaleFactor=1.2, minNeighbors=4, minSize=(10, 10))
-    for x, y, w, h in face:
-        tab_face.append([width-x, y, width-(x+w), y+h])
-    tab_face = sorted(tab_face, key=operator.itemgetter(0, 1))
     index = 0
     for x, y, x2, y2 in tab_face:
-        if not index or (x-tab_face[index-1][0]>marge or y-tab_face[index-1][1]>marge):
+        if not index or (x-tab_face[index-1][0] > c.marge or y-tab_face[index-1][1] > c.marge):
+            if x <= 90:
+                color = c.color_gauche
+            elif x >= 300:
+                color = c.color_droite
+            else:
+                color = c.color_centre
             cv2.rectangle(frame, (x, y), (x2, y2), (0, 0, 255), 2)
+            cv2.putText(frame, str(x), (x, y), font, 1, color, 2, cv2.LINE_AA)
         index += 1
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
